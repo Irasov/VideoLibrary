@@ -10,12 +10,12 @@ public class Movie extends NamedEntity {
     private List<Member> members;
     private String country;
 
-    public Movie(){
+    public Movie() {
         super();
         members = new ArrayList<Member>();
     }
 
-    public Movie(Date release, String country){
+    public Movie(Date release, String country) {
         this();
         this.release = release;
         this.country = country;
@@ -46,28 +46,29 @@ public class Movie extends NamedEntity {
         this.country = country;
     }
 
-    public void addMember(Member member){
+    public void addMember(Member member) {
         members.add(member);
     }
 
-    public static class Member extends NamedEntity{
-        private  LocalDate date;
-        private  String memberRole;
-        public  Member(){
+    public static class Member extends NamedEntity {
+        private Date date;
+        private String memberRole;
+
+        public Member() {
 
         }
 
-        public Member(Long id, String name, LocalDate date, String memberRole) {
+        public Member(Long id, String name, Date date, String memberRole) {
             super(id, name);
             this.date = date;
             this.memberRole = memberRole;
         }
 
-        public LocalDate getDate() {
+        public Date getDate() {
             return date;
         }
 
-        public void setDate(LocalDate date) {
+        public void setDate(Date date) {
             this.date = date;
         }
 
@@ -99,10 +100,9 @@ public class Movie extends NamedEntity {
 
         @Override
         public String toString() {
-            return "Member{" +
+            return super.toString() +
                     "date=" + date +
-                    ", memberRole='" + memberRole + '\'' +
-                    '}';
+                    ", memberRole=" + memberRole;
         }
     }
 
@@ -127,8 +127,12 @@ public class Movie extends NamedEntity {
 
     @Override
     public String toString() {
-        return super.toString()+
-                " release=" + release +
-                ", country=" + country;
+        String str = " release=" + release +
+                     ", country=" + country +
+                     ", members:\n";
+        for (Member member : members) {
+            str += member.toString() + "\n";
+        }
+        return super.toString()+str;
     }
 }

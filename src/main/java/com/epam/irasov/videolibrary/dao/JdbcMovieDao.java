@@ -2,7 +2,17 @@ package com.epam.irasov.videolibrary.dao;
 
 import com.epam.irasov.videolibrary.entity.Movie;
 
+import java.sql.Connection;
+
 public class JdbcMovieDao implements MovieDao{
+
+    private final Connection connection;
+
+    public JdbcMovieDao(Connection connection){
+        this.connection = connection;
+    }
+
+
     public Movie findById(Long id) {
         return null;
     }

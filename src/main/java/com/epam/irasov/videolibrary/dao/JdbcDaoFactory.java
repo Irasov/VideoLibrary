@@ -1,15 +1,16 @@
 package com.epam.irasov.videolibrary.dao;
 
-import com.epam.irasov.videolibrary.bd.ConnPool;
+import java.sql.Connection;
 
 public  class JdbcDaoFactory extends DaoFactory {
 
-    public JdbcDaoFactory(){
-        ConnPool.getInstance();
-    }
+    private final Connection connection;
 
+    public JdbcDaoFactory(Connection connection) {
+        this.connection = connection;
+    }
     @Override
     public MovieDao newMovieDao() {
-        return new JdbcMovieDao();
+        return new JdbcMovieDao(connection);
     }
 }

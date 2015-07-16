@@ -21,11 +21,13 @@ public class JdbcMovieDao implements MovieDao {
     public Movie findById(Long id) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID);
+            int index= 1;
+            preparedStatement.setLong(index,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             boolean found =resultSet.next();
             if(!found) return null;
             Movie movie = new Movie();
-            movie.setId(resultSet.getLong("ID"));
+            movie.setId(resultSet.getLong("ID_MOVIE"));
             movie.setName(resultSet.getString("NAME"));
             movie.setRelease(resultSet.getDate("DATE"));
             movie.setCountry(resultSet.getString("COUNTRY"));

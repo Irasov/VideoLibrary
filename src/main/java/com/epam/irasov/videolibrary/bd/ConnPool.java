@@ -11,18 +11,19 @@ public class ConnPool {
     public static String CONNECT_NAME = "1";
 
     Connection connection;
+
     private ConnPool() {
         try {
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(CONNECT, CONNECT_ID, CONNECT_NAME);
         } catch (ClassNotFoundException e) {
-           throw new ConnPoolException(e);
+            throw new ConnPoolException(e);
         } catch (SQLException e) {
-           throw new ConnPoolException(e);
+            throw new ConnPoolException(e);
         }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 

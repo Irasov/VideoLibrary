@@ -12,7 +12,7 @@ public class Movie extends NamedEntity {
 
     public Movie() {
         super();
-        members = new ArrayList<Member>();
+        members = new ArrayList<>();
     }
 
     public Movie(Date release, String country) {
@@ -101,7 +101,7 @@ public class Movie extends NamedEntity {
         @Override
         public String toString() {
             return super.toString() +
-                    "date=" + date +
+                    " ,date=" + date +
                     ", memberRole=" + memberRole;
         }
     }

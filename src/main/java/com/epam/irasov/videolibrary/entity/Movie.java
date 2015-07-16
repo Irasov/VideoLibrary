@@ -1,12 +1,54 @@
 package com.epam.irasov.videolibrary.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Movie extends NamedEntity {
-    private LocalDate release;
+    private Date release;
     private List<Member> members;
     private String country;
+
+    public Movie(){
+        super();
+        members = new ArrayList<Member>();
+    }
+
+    public Movie(Date release, String country){
+        this();
+        this.release = release;
+        this.country = country;
+
+    }
+
+    public Date getRelease() {
+        return release;
+    }
+
+    public void setRelease(Date release) {
+        this.release = release;
+    }
+
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void addMember(Member member){
+        members.add(member);
+    }
 
     public static class Member extends NamedEntity{
         private  LocalDate date;

@@ -22,6 +22,10 @@ public class ConnPool {
         }
     }
 
+    public Connection getConnection(){
+        return connection;
+    }
+
     private static class ConnPoolHolder {
         private final static ConnPool instance = new ConnPool();
     }

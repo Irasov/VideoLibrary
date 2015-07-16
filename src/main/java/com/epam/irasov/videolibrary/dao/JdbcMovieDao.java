@@ -9,6 +9,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class JdbcMovieDao implements MovieDao {
+    private  final static String RESULT_ID="id";
+    private  final static String RESULT_DATE="date";
+    private  final static String RESULT_NAME="name";
+    private  final static String RESULT_COUNTRY="country";
+    private  final static String RESULT_LAST_NAME="last_name";
+    private  final static String RESULT_SECOND_NAME="second_name";
+    private  final static String RESULT_PATRONYMIC="patronymic";
+    private  final static String RESULT_ROLE="role";
     private final static String FIND_BY_ID = "SELECT ID, NAME, COUNTRY, DATE FROM MOVIE WHERE ID = ?";
     private final static String FIND_BY_ID_MEMBER = "SELECT ID,SECOND_NAME,LAST_NAME,PATRONYMIC,DATE,ROLE FROM MEMBER WHERE ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER WHERE ID_MOVIE=?)";
 
@@ -28,10 +36,10 @@ public class JdbcMovieDao implements MovieDao {
             boolean found = resultSet.next();
             if (!found) return null;
             Movie movie = new Movie();
-            movie.setId(resultSet.getLong("id"));
-            movie.setName(resultSet.getString("name"));
-            movie.setRelease(resultSet.getDate("date"));
-            movie.setCountry(resultSet.getString("country"));
+            movie.setId(resultSet.getLong(RESULT_ID));
+            movie.setName(resultSet.getString(RESULT_NAME));
+            movie.setRelease(resultSet.getDate(RESULT_DATE));
+            movie.setCountry(resultSet.getString(RESULT_COUNTRY));
 
             preparedStatement = connection.prepareStatement(FIND_BY_ID_MEMBER);
             preparedStatement.setLong(index, id);
@@ -41,12 +49,12 @@ public class JdbcMovieDao implements MovieDao {
             Movie.Member member;
             while (found) {
                 member = new Movie.Member();
-                member.setId(resultSet.getLong("id"));
-                member.setName(resultSet.getString("last_name"));
-                member.setSecondName(resultSet.getString("second_name"));
-                member.setPatronymic(resultSet.getString("patronymic"));
-                member.setDate(resultSet.getDate("date"));
-                member.setMemberRole(resultSet.getString("role"));
+                member.setId(resultSet.getLong(RESULT_ID));
+                member.setName(resultSet.getString(RESULT_LAST_NAME));
+                member.setSecondName(resultSet.getString(RESULT_SECOND_NAME));
+                member.setPatronymic(resultSet.getString(RESULT_PATRONYMIC));
+                member.setDate(resultSet.getDate(RESULT_DATE));
+                member.setMemberRole(resultSet.getString(RESULT_ROLE));
                 movie.addMember(member);
                 found = resultSet.next();
             }

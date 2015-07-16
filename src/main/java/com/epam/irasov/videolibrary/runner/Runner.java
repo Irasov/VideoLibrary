@@ -13,7 +13,7 @@ public class Runner {
         daoFactory.beginTx();
         MovieDao movieDao = daoFactory.newMovieDao();
 
-        Movie movie = movieDao.findById(1L);
+        Movie movie = movieDao.findById(2L);
         LOGGER.info(movie.toString());
         daoFactory.endTx();
         daoFactory.close();

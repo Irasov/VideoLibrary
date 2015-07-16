@@ -16,9 +16,7 @@ public class ConnPool {
         try {
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(CONNECT, CONNECT_ID, CONNECT_NAME);
-        } catch (ClassNotFoundException e) {
-            throw new ConnPoolException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new ConnPoolException(e);
         }
     }

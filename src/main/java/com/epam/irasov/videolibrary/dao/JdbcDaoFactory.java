@@ -16,7 +16,7 @@ public  class JdbcDaoFactory extends DaoFactory {
     }
 
     @Override
-    void beginTx() {
+   public void beginTx() {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
@@ -25,7 +25,7 @@ public  class JdbcDaoFactory extends DaoFactory {
     }
 
     @Override
-    void endTx() {
+    public void endTx() {
         try {
             connection.commit();
         } catch (SQLException e) {
@@ -34,7 +34,7 @@ public  class JdbcDaoFactory extends DaoFactory {
     }
 
     @Override
-    void rollbackTx() {
+    public void rollbackTx() {
         try {
             connection.rollback();
         } catch (SQLException e) {
@@ -44,7 +44,7 @@ public  class JdbcDaoFactory extends DaoFactory {
     }
 
     @Override
-    void close() {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {

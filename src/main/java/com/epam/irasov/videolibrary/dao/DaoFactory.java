@@ -14,11 +14,11 @@ public abstract  class DaoFactory {
 
     public abstract MovieDao newMovieDao();
 
-    abstract void beginTx();
+    public abstract void beginTx();
 
-    abstract void endTx();
+    public abstract void endTx();
 
-    abstract void rollbackTx();
+    public abstract void rollbackTx();
 
-    abstract void close();
+    public abstract void close();
 }

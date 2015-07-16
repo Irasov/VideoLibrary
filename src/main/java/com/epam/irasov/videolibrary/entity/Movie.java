@@ -53,13 +53,17 @@ public class Movie extends NamedEntity {
     public static class Member extends NamedEntity {
         private Date date;
         private String memberRole;
+        private String secondName;
+        private String patronymic;
 
         public Member() {
 
         }
 
-        public Member(Long id, String name, Date date, String memberRole) {
+        public Member(Long id, String name,String secondName,String patronymic, Date date, String memberRole) {
             super(id, name);
+            this.secondName = secondName;
+            this.patronymic = patronymic;
             this.date = date;
             this.memberRole = memberRole;
         }
@@ -78,6 +82,22 @@ public class Movie extends NamedEntity {
 
         public void setMemberRole(String memberRole) {
             this.memberRole = memberRole;
+        }
+
+        public String getSecondName() {
+            return secondName;
+        }
+
+        public void setSecondName(String secondName) {
+            this.secondName = secondName;
+        }
+
+        public String getPatronymic() {
+            return patronymic;
+        }
+
+        public void setPatronymic(String patronymic) {
+            this.patronymic = patronymic;
         }
 
         @Override
@@ -101,6 +121,8 @@ public class Movie extends NamedEntity {
         @Override
         public String toString() {
             return super.toString() +
+                    ",second name="+secondName+
+                    ",patronymic="+patronymic+
                     " ,date=" + date +
                     ", memberRole=" + memberRole;
         }

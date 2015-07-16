@@ -107,4 +107,33 @@ public class Movie extends NamedEntity {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Movie)) return false;
+        if (!super.equals(o)) return false;
+
+        Movie movie = (Movie) o;
+
+        if (release != null ? !release.equals(movie.release) : movie.release != null) return false;
+        if (members != null ? !members.equals(movie.members) : movie.members != null) return false;
+        return !(country != null ? !country.equals(movie.country) : movie.country != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (release != null ? release.hashCode() : 0);
+        result = 31 * result + (members != null ? members.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                " release=" + release +
+                ", country=" + country;
+    }
 }

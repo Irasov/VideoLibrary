@@ -2,7 +2,7 @@ package com.epam.irasov.videolibrary.entity;
 
 public abstract class BaseEntity {
 
-    public BaseEntity(){
+    public BaseEntity() {
 
     }
 
@@ -36,8 +36,6 @@ public abstract class BaseEntity {
 
     @Override
     public String toString() {
-        return "BaseEntity{" +
-                "id=" + id +
-                '}';
+        return "id=" + id;
     }
 }

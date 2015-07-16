@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class JdbcMovieDao implements MovieDao {
-    private final static String FIND_BY_ID="SELECT ID, NAME, COUNTRY, DATE FROM MOVIE WHERE ID = ?";
-    private final static String FIND_BY_ID_MEMBER="SELECT ID,NAME,DATE,ROLE FROM MEMBER WHERE ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER WHERE ID_MOVIE=?)";
+    private final static String FIND_BY_ID = "SELECT ID, NAME, COUNTRY, DATE FROM MOVIE WHERE ID = ?";
+    private final static String FIND_BY_ID_MEMBER = "SELECT ID,NAME,DATE,ROLE FROM MEMBER WHERE ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER WHERE ID_MOVIE=?)";
 
     private final Connection connection;
 
@@ -22,11 +22,11 @@ public class JdbcMovieDao implements MovieDao {
     public Movie findById(Long id) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID);
-            int index= 1;
-            preparedStatement.setLong(index,id);
+            int index = 1;
+            preparedStatement.setLong(index, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            boolean found =resultSet.next();
-            if(!found) return null;
+            boolean found = resultSet.next();
+            if (!found) return null;
             Movie movie = new Movie();
             movie.setId(resultSet.getLong("id"));
             movie.setName(resultSet.getString("name"));
@@ -34,19 +34,19 @@ public class JdbcMovieDao implements MovieDao {
             movie.setCountry(resultSet.getString("country"));
 
             preparedStatement = connection.prepareStatement(FIND_BY_ID_MEMBER);
-            preparedStatement.setLong(index,id);
+            preparedStatement.setLong(index, id);
             resultSet = preparedStatement.executeQuery();
-            found =resultSet.next();
-            if(!found) return null;
+            found = resultSet.next();
+            if (!found) return null;
             Movie.Member member;
-            while (found){
+            while (found) {
                 member = new Movie.Member();
                 member.setId(resultSet.getLong("id"));
                 member.setName(resultSet.getString("name"));
                 member.setDate(resultSet.getDate("date"));
                 member.setMemberRole(resultSet.getString("role"));
                 movie.addMember(member);
-                found= resultSet.next();
+                found = resultSet.next();
             }
             return movie;
         } catch (SQLException e) {

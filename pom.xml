@@ -10,6 +10,7 @@
     <groupId>com.epam.irasov.videolibrary</groupId>
     <artifactId>video-library</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
     <dependencies>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -25,6 +26,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.12</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 </project>

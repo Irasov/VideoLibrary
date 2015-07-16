@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 public class JdbcMovieDao implements MovieDao {
     private final static String FIND_BY_ID="SELECT ID, NAME, COUNTRY, DATE FROM MOVIE WHERE ID = ?";
+    private final static String FIND_BY_ID_MEMBER="SELECT ID,NAME,DATE,ROLE FROM MEMBER WHERE ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER WHERE ID_MOVIE=?)";
 
     private final Connection connection;
 
@@ -32,6 +33,21 @@ public class JdbcMovieDao implements MovieDao {
             movie.setRelease(resultSet.getDate("date"));
             movie.setCountry(resultSet.getString("country"));
 
+            preparedStatement = connection.prepareStatement(FIND_BY_ID_MEMBER);
+            preparedStatement.setLong(index,id);
+            resultSet = preparedStatement.executeQuery();
+            found =resultSet.next();
+            if(!found) return null;
+            Movie.Member member;
+            while (found){
+                member = new Movie.Member();
+                member.setId(resultSet.getLong("id"));
+                member.setName(resultSet.getString("name"));
+                member.setDate(resultSet.getDate("date"));
+                member.setMemberRole(resultSet.getString("role"));
+                movie.addMember(member);
+                found= resultSet.next();
+            }
             return movie;
         } catch (SQLException e) {
             throw new DaoException(e);

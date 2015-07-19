@@ -24,7 +24,7 @@ public class ServletMovie extends javax.servlet.http.HttpServlet {
         Movie movie;
         if(requestBd.equals("find by id")) {
             String id = request.getParameter("id");
-            movie = movieDao.findById(Long.parseLong(id)/*1L*/);
+            movie = movieDao.findById(Long.parseLong(id));
             session = request.getSession();
             session.setAttribute("movie", movie);
         }

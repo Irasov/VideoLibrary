@@ -7,45 +7,43 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
-public class ListConnPool {
+public class ListConnectionPool {
     public static String DRIVER = "org.h2.Driver";
     public static String CONNECT = "jdbc:h2:tcp://localhost/~/jdbcmovie";
     public static String CONNECT_ID = "1";
     public static String CONNECT_NAME = "1";
     public static int DEFAULT_POOL_SIZE = 8;
 
-    private static ListConnPool instance;
     private BlockingQueue<Connection> connectionQueue;
 
-    private ListConnPool(String driver, String connect, String connectId, String connectName, int defaultPoolSize) {
+    private ListConnectionPool() {
         try {
             Class.forName(DRIVER);
-            connectionQueue = new ArrayBlockingQueue<Connection>(defaultPoolSize);
-            for (int i = 0; i < defaultPoolSize; i++) {
-                Connection connection = DriverManager.getConnection(connect, connectId, connectName);
+            connectionQueue = new ArrayBlockingQueue<>(DEFAULT_POOL_SIZE);
+            for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+                Connection connection = DriverManager.getConnection(CONNECT, CONNECT_ID, CONNECT_NAME);
                 PolledConnection polledConnection = new PolledConnection(connection);
                 connectionQueue.offer(polledConnection);
             }
 
         } catch (ClassNotFoundException | SQLException e) {
-            throw new ConnPoolException(e);
+            throw new ConnectionPoolException(e);
         }
     }
 
-    public static void initialization() throws SQLException {
-        instance = new ListConnPool(DRIVER, CONNECT, CONNECT_ID, CONNECT_NAME, DEFAULT_POOL_SIZE);
-
+    private static class ConnPoolHolder {
+        private final static ListConnectionPool instance = new ListConnectionPool();
     }
 
-    public static ListConnPool getInstance() {
-        return instance;
+    public static ListConnectionPool getInstance() {
+        return ConnPoolHolder.instance;
     }
 
     public PolledConnection takeConnection() {
         try {
             return (PolledConnection) connectionQueue.take();
         } catch (InterruptedException e) {
-            throw new ConnPoolException(e);
+            throw new ConnectionPoolException(e);
         }
     }
 

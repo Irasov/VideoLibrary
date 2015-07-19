@@ -1,5 +1,8 @@
 package com.epam.irasov.videolibrary.bd;
 
+import com.epam.irasov.videolibrary.util.Configuration;
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -8,25 +11,27 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public class ConnectionPool {
-    public static String DRIVER = "org.h2.Driver";
-    public static String CONNECT = "jdbc:h2:tcp://localhost/~/jdbcmovie";
-    public static String CONNECT_ID = "1";
-    public static String CONNECT_NAME = "1";
-    public static int DEFAULT_POOL_SIZE = 8;
+    private final static int DEFAULT_POOL_SIZE = 8;
+    private final static String DRIVER = "jdbc.driver";
+    private final static String CONNECT = "jdbc.connect";
+    private final static String CONNECT_ID = "jdbc.connect.id";
+    private final static String CONNECT_NAME = "jdbc.connect.name";
 
     private BlockingQueue<Connection> connectionQueue;
 
     private ConnectionPool() {
         try {
-            Class.forName(DRIVER);
+            Configuration configuration = Configuration.getInstance();
+            configuration.loadConfiguration();
+            Class.forName(configuration.getProperties(DRIVER));
             connectionQueue = new ArrayBlockingQueue<>(DEFAULT_POOL_SIZE);
             for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
-                Connection connection = DriverManager.getConnection(CONNECT, CONNECT_ID, CONNECT_NAME);
+                Connection connection = DriverManager.getConnection(configuration.getProperties(CONNECT),configuration.getProperties(CONNECT_ID),configuration.getProperties(CONNECT_NAME));
                 PolledConnection polledConnection = new PolledConnection(connection);
                 connectionQueue.offer(polledConnection);
             }
 
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (IOException | ClassNotFoundException | SQLException e) {
             throw new ConnectionPoolException(e);
         }
     }
@@ -311,7 +316,7 @@ public class ConnectionPool {
 
         @Override
         public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-            connection.setNetworkTimeout(executor,milliseconds);
+            connection.setNetworkTimeout(executor, milliseconds);
         }
 
         @Override

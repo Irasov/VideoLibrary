@@ -7,7 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
-public class ListConnectionPool {
+public class ConnectionPool {
     public static String DRIVER = "org.h2.Driver";
     public static String CONNECT = "jdbc:h2:tcp://localhost/~/jdbcmovie";
     public static String CONNECT_ID = "1";
@@ -16,7 +16,7 @@ public class ListConnectionPool {
 
     private BlockingQueue<Connection> connectionQueue;
 
-    private ListConnectionPool() {
+    private ConnectionPool() {
         try {
             Class.forName(DRIVER);
             connectionQueue = new ArrayBlockingQueue<>(DEFAULT_POOL_SIZE);
@@ -32,10 +32,10 @@ public class ListConnectionPool {
     }
 
     private static class ConnPoolHolder {
-        private final static ListConnectionPool instance = new ListConnectionPool();
+        private final static ConnectionPool instance = new ConnectionPool();
     }
 
-    public static ListConnectionPool getInstance() {
+    public static ConnectionPool getInstance() {
         return ConnPoolHolder.instance;
     }
 

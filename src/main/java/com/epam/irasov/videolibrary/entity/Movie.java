@@ -112,10 +112,7 @@ public class Movie extends NamedEntity {
             if (!(o instanceof Member)) return false;
             if (!super.equals(o)) return false;
             Member member = (Member) o;
-            if (date != null ? !date.equals(member.date) : member.date != null) return false;
-            if (memberRole != null ? !memberRole.equals(member.memberRole) : member.memberRole != null) return false;
-            if (secondName != null ? !secondName.equals(member.secondName) : member.secondName != null) return false;
-            return !(patronymic != null ? !patronymic.equals(member.patronymic) : member.patronymic != null);
+            return !(date != null ? !date.equals(member.date) : member.date != null) && !(memberRole != null ? !memberRole.equals(member.memberRole) : member.memberRole != null) && !(secondName != null ? !secondName.equals(member.secondName) : member.secondName != null) && !(patronymic != null ? !patronymic.equals(member.patronymic) : member.patronymic != null);
 
         }
 
@@ -145,9 +142,7 @@ public class Movie extends NamedEntity {
         if (!(o instanceof Movie)) return false;
         if (!super.equals(o)) return false;
         Movie movie = (Movie) o;
-        if (release != null ? !release.equals(movie.release) : movie.release != null) return false;
-        if (members != null ? !members.equals(movie.members) : movie.members != null) return false;
-        return !(country != null ? !country.equals(movie.country) : movie.country != null);
+        return !(release != null ? !release.equals(movie.release) : movie.release != null) && !(members != null ? !members.equals(movie.members) : movie.members != null) && !(country != null ? !country.equals(movie.country) : movie.country != null);
 
     }
 

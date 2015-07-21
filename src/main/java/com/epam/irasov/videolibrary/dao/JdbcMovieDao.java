@@ -65,7 +65,7 @@ public class JdbcMovieDao implements MovieDao {
                 found = resultSet.next();
             }
             return movie;
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             throw new DaoException(e);
         }
     }
@@ -90,7 +90,7 @@ public class JdbcMovieDao implements MovieDao {
                 preparedStatement = connection.prepareStatement(INSERT_MEMBER);
                 setInsertMember(preparedStatement, member.getId(), member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
                 preparedStatement = connection.prepareStatement(INSERT_MOVIE_MEMBER);
-                setInsertMovieMember(preparedStatement,movie.getId(),member.getId());
+                setInsertMovieMember(preparedStatement, movie.getId(), member.getId());
             }
             return movie;
         } catch (SQLException e) {
@@ -98,7 +98,18 @@ public class JdbcMovieDao implements MovieDao {
         }
     }
 
-    static void setInsertMovieMember(PreparedStatement preparedStatement, Long idMovie, Long idMember)throws SQLException{
+    @Override
+    public Movie.Member insertMember(Movie.Member member) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_MEMBER);
+            setInsertMember(preparedStatement, member.getId(), member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
+            return member;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    static void setInsertMovieMember(PreparedStatement preparedStatement, Long idMovie, Long idMember) throws SQLException {
         int index = 1;
         preparedStatement.setLong(index, idMovie);
         index++;

@@ -8,6 +8,7 @@ public interface MovieDao {
     Movie save (Movie movie);
     Movie merge (Movie movie);
     Movie insert(Movie movie);
+    Movie.Member insertMember(Movie.Member member);
     boolean remove(Movie movie);
     void removeByID(Long id);
 }

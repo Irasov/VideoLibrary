@@ -23,7 +23,7 @@ public class JdbcMovieDao implements MovieDao {
     private final static String FIND_BY_ID = "SELECT ID, NAME, COUNTRY, DATE FROM MOVIE WHERE ID = ?";
     private final static String FIND_BY_ID_MEMBER = "SELECT ID,SECOND_NAME,LAST_NAME,PATRONYMIC,DATE,ROLE FROM MEMBER WHERE ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER WHERE ID_MOVIE=?)";
     private final static String INSERT_MOVIE = "INSERT INTO MOVIE(ID, NAME, COUNTRY, DATE) VALUES(?,?,?,?)";
-    private final static String INSERT_MEMBER = "INSERT INTO MEMBER(ID, SECOND_NAME, LAST_NAME, PATRONYMIC, DATE, ROLE) VALUES(?,?,?,?,?,?)";
+    private final static String INSERT_MEMBER = "INSERT INTO MEMBER(SECOND_NAME, LAST_NAME, PATRONYMIC, DATE, ROLE) VALUES(?,?,?,?,?)";
     private final static String INSERT_MOVIE_MEMBER = "INSERT INTO MOVIE_MEMBER(ID_MOVIE, ID_MEMBER) VALUES(?,?)";
     ;
     private final Connection connection;
@@ -88,7 +88,7 @@ public class JdbcMovieDao implements MovieDao {
             setInsertMovie(preparedStatement, movie.getId(), movie.getName(), movie.getCountry(), movie.getRelease());
             for (Movie.Member member : movie.getMembers()) {
                 preparedStatement = connection.prepareStatement(INSERT_MEMBER);
-                setInsertMember(preparedStatement, member.getId(), member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
+                setInsertMember(preparedStatement, member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
                 preparedStatement = connection.prepareStatement(INSERT_MOVIE_MEMBER);
                 setInsertMovieMember(preparedStatement, movie.getId(), member.getId());
             }
@@ -102,7 +102,7 @@ public class JdbcMovieDao implements MovieDao {
     public Movie.Member insertMember(Movie.Member member) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_MEMBER);
-            setInsertMember(preparedStatement, member.getId(), member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
+            setInsertMember(preparedStatement, member.getSecondName(), member.getName(), member.getPatronymic(), member.getDate(), member.getMemberRole());
             return member;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -117,10 +117,8 @@ public class JdbcMovieDao implements MovieDao {
         preparedStatement.executeUpdate();
     }
 
-    static void setInsertMember(PreparedStatement preparedStatement, Long id, String secondName, String lastName, String patronymic, LocalDate date, String role) throws SQLException {
+    static void setInsertMember(PreparedStatement preparedStatement, String secondName, String lastName, String patronymic, LocalDate date, String role) throws SQLException {
         int index = 1;
-        preparedStatement.setLong(index, id);
-        index++;
         preparedStatement.setString(index, secondName);
         index++;
         preparedStatement.setString(index, lastName);

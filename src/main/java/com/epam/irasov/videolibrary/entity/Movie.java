@@ -2,11 +2,10 @@ package com.epam.irasov.videolibrary.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Movie extends NamedEntity {
-    private Date release;
+    private LocalDate release;
     private List<Member> members;
     private String country;
 
@@ -15,18 +14,25 @@ public class Movie extends NamedEntity {
         members = new ArrayList<>();
     }
 
-    public Movie(Date release, String country) {
+    public Movie(LocalDate release, String country) {
         this();
         this.release = release;
         this.country = country;
 
     }
 
-    public Date getRelease() {
+    public Movie(Long id,String name,LocalDate release, String country) {
+        super(id,name);
+        this.release = release;
+        this.country = country;
+        members = new ArrayList<>();
+    }
+
+    public LocalDate getRelease() {
         return release;
     }
 
-    public void setRelease(Date release) {
+    public void setRelease(LocalDate release) {
         this.release = release;
     }
 
@@ -51,7 +57,7 @@ public class Movie extends NamedEntity {
     }
 
     public static class Member extends NamedEntity {
-        private Date date;
+        private LocalDate date;
         private String memberRole;
         private String secondName;
         private String patronymic;
@@ -60,7 +66,7 @@ public class Movie extends NamedEntity {
 
         }
 
-        public Member(Long id, String name,String secondName,String patronymic, Date date, String memberRole) {
+        public Member(Long id, String name,String secondName,String patronymic, LocalDate date, String memberRole) {
             super(id, name);
             this.secondName = secondName;
             this.patronymic = patronymic;
@@ -68,11 +74,11 @@ public class Movie extends NamedEntity {
             this.memberRole = memberRole;
         }
 
-        public Date getDate() {
+        public LocalDate getDate() {
             return date;
         }
 
-        public void setDate(Date date) {
+        public void setDate(LocalDate date) {
             this.date = date;
         }
 
@@ -106,7 +112,10 @@ public class Movie extends NamedEntity {
             if (!(o instanceof Member)) return false;
             if (!super.equals(o)) return false;
             Member member = (Member) o;
-            return !(date != null ? !date.equals(member.date) : member.date != null) && !(memberRole != null ? !memberRole.equals(member.memberRole) : member.memberRole != null);
+            if (date != null ? !date.equals(member.date) : member.date != null) return false;
+            if (memberRole != null ? !memberRole.equals(member.memberRole) : member.memberRole != null) return false;
+            if (secondName != null ? !secondName.equals(member.secondName) : member.secondName != null) return false;
+            return !(patronymic != null ? !patronymic.equals(member.patronymic) : member.patronymic != null);
 
         }
 
@@ -115,6 +124,8 @@ public class Movie extends NamedEntity {
             int result = super.hashCode();
             result = 31 * result + (date != null ? date.hashCode() : 0);
             result = 31 * result + (memberRole != null ? memberRole.hashCode() : 0);
+            result = 31 * result + (secondName != null ? secondName.hashCode() : 0);
+            result = 31 * result + (patronymic != null ? patronymic.hashCode() : 0);
             return result;
         }
 
@@ -134,7 +145,9 @@ public class Movie extends NamedEntity {
         if (!(o instanceof Movie)) return false;
         if (!super.equals(o)) return false;
         Movie movie = (Movie) o;
-        return !(release != null ? !release.equals(movie.release) : movie.release != null) && !(members != null ? !members.equals(movie.members) : movie.members != null) && !(country != null ? !country.equals(movie.country) : movie.country != null);
+        if (release != null ? !release.equals(movie.release) : movie.release != null) return false;
+        if (members != null ? !members.equals(movie.members) : movie.members != null) return false;
+        return !(country != null ? !country.equals(movie.country) : movie.country != null);
 
     }
 

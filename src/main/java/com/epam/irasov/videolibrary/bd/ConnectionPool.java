@@ -105,7 +105,7 @@ public class ConnectionPool {
             if (connection.isReadOnly()) {
                 connection.setReadOnly(false);
             }
-            connectionQueue.offer(connection);
+            connectionQueue.offer(this);
         }
 
         @Override

@@ -40,6 +40,10 @@ public class Movie extends NamedEntity {
         return members;
     }
 
+    public void setMember(Member member){
+        members.add(member);
+    }
+
     public void setMembers(List<Member> members) {
         this.members = members;
     }

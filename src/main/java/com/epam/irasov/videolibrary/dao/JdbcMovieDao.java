@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 
@@ -25,7 +27,10 @@ public class JdbcMovieDao implements MovieDao {
     private final static String INSERT_MOVIE = "INSERT INTO MOVIE(ID, NAME, COUNTRY, DATE) VALUES(?,?,?,?)";
     private final static String INSERT_MEMBER = "INSERT INTO MEMBER(SECOND_NAME, LAST_NAME, PATRONYMIC, DATE, ROLE) VALUES(?,?,?,?,?)";
     private final static String INSERT_MOVIE_MEMBER = "INSERT INTO MOVIE_MEMBER(ID_MOVIE, ID_MEMBER) VALUES(?,?)";
-    ;
+    private final static String DELETE_MOVIE = "DELETE FROM MOVIE WHERE DATE>?";
+    private final static String DELETE_MOVIE_MEMBER = "DELETE FROM MOVIE_MEMBER WHERE ID_MOVIE=ANY(SELECT ID FROM MOVIE WHERE DATE>?)";
+    private final static String FIND_BY_COUNT_MOVIE_MEMBER = "SELECT ID,SECOND_NAME,LAST_NAME,PATRONYMIC,DATE,ROLE FROM MEMBER WHERE ROLE=? AND ID=ANY(SELECT ID_MEMBER FROM MOVIE_MEMBER GROUP BY ID_MEMBER HAVING COUNT(ID_MEMBER)=?)";
+
     private final Connection connection;
 
     public JdbcMovieDao(Connection connection) {
@@ -71,15 +76,45 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     public void update(Movie movie) {
-
     }
 
     public Movie save(Movie movie) {
         return null;
     }
 
+    @Override
     public Movie merge(Movie movie) {
         return null;
+    }
+
+    public List<Movie.Member> selectMember(int countMovie) {
+        List<Movie.Member> members = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_COUNT_MOVIE_MEMBER);
+            int index = 1;
+            preparedStatement.setString(index, "actor");
+            index++;
+            preparedStatement.setLong(index, countMovie);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Boolean found = resultSet.next();
+            if (!found) return null;
+            Movie.Member member;
+            while (found) {
+                member = new Movie.Member();
+                member.setId(resultSet.getLong(RESULT_ID));
+                member.setName(resultSet.getString(RESULT_LAST_NAME));
+                member.setSecondName(resultSet.getString(RESULT_SECOND_NAME));
+                member.setPatronymic(resultSet.getString(RESULT_PATRONYMIC));
+                member.setDate(LocalDate.parse(resultSet.getDate(RESULT_DATE).toString(), ofPattern("yyyy-MM-dd")));
+                member.setMemberRole(resultSet.getString(RESULT_ROLE));
+                members.add(member);
+                found = resultSet.next();
+            }
+            return members;
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
     }
 
     public Movie insert(Movie movie) {
@@ -147,7 +182,17 @@ public class JdbcMovieDao implements MovieDao {
         return false;
     }
 
-    public void removeByID(Long id) {
-
+    public void removeByDate(LocalDate release) {
+        try {
+            int index = 1;
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_MOVIE_MEMBER);
+            preparedStatement.setDate(index, Date.valueOf(release));
+            preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement(DELETE_MOVIE);
+            preparedStatement.setDate(index, Date.valueOf(release));
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }

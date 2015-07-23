@@ -11,7 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public class ConnectionPool {
-    private final static int DEFAULT_POOL_SIZE = 8;
+    private final static String DEFAULT_POOL_SIZE = "jdbc.default.pool.size";
     private final static String DRIVER = "jdbc.driver";
     private final static String CONNECT = "jdbc.connect";
     private final static String CONNECT_ID = "jdbc.connect.id";
@@ -24,8 +24,8 @@ public class ConnectionPool {
             Configuration configuration = Configuration.getInstance();
             configuration.loadConfiguration();
             Class.forName(configuration.getProperties(DRIVER));
-            connectionQueue = new ArrayBlockingQueue<>(DEFAULT_POOL_SIZE);
-            for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+            connectionQueue = new ArrayBlockingQueue<>(Integer.parseInt(configuration.getProperties(DEFAULT_POOL_SIZE)));
+            for (int i = 0; i < Integer.parseInt(configuration.getProperties(DEFAULT_POOL_SIZE)); i++) {
                 Connection connection = DriverManager.getConnection(configuration.getProperties(CONNECT),configuration.getProperties(CONNECT_ID),configuration.getProperties(CONNECT_NAME));
                 PolledConnection polledConnection = new PolledConnection(connection);
                 connectionQueue.offer(polledConnection);
